@@ -10,7 +10,9 @@ import {
 import { GameItemsService } from './game-items.service';
 import { CreateGameItemDto } from './dto/create-game-item.dto';
 import { UpdateGameItemDto } from './dto/update-game-item.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('game-items')
 @Controller('game-items')
 export class GameItemsController {
   constructor(private readonly gameItemsService: GameItemsService) {}
