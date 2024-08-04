@@ -1,26 +1,39 @@
 import { Injectable } from '@nestjs/common';
 import { CreateGameItemDto } from './dto/create-game-item.dto';
 import { UpdateGameItemDto } from './dto/update-game-item.dto';
+import { InjectModel } from '@nestjs/sequelize';
+import { GameItem } from './model/game-item.model';
 
 @Injectable()
 export class GameItemsService {
-  create(createGameItemDto: CreateGameItemDto) {
-    return 'This action adds a new gameItem';
+  constructor(
+    @InjectModel(GameItem)
+    private readonly gameItemModel: typeof GameItem,
+  ) {}
+
+  create(createGameItemDto: CreateGameItemDto): Promise<GameItem> {
+    return this.gameItemModel.create(createGameItemDto);
   }
 
-  findAll() {
-    return `This action returns all gameItems`;
+  findAll(): Promise<GameItem[]> {
+    return this.gameItemModel.findAll();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} gameItem`;
+  findOne(id: number): Promise<GameItem> {
+    return this.gameItemModel.findOne({ where: { id } });
   }
 
-  update(id: number, updateGameItemDto: UpdateGameItemDto) {
-    return `This action updates a #${id} gameItem`;
+  update(
+    id: number,
+    updateGameItemDto: UpdateGameItemDto,
+  ): Promise<[number, GameItem[]]> {
+    return this.gameItemModel.update(updateGameItemDto, {
+      where: { id },
+      returning: true,
+    });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} gameItem`;
+  remove(id: number): Promise<number> {
+    return this.gameItemModel.destroy({ where: { id } });
   }
 }

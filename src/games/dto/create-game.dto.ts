@@ -5,8 +5,8 @@ export class CreateGameDto {
   @IsString({
     message: 'Judul harus berupa string',
   })
-  @MinLength(10, {
-    message: 'Judul minimal 10 karakter',
+  @MinLength(5, {
+    message: 'Judul minimal 5 karakter',
   })
   @IsNotEmpty({
     message: 'Judul tidak boleh kosong',

@@ -20,7 +20,7 @@ export class GamesService {
   }
 
   findOne(id: number): Promise<Game> {
-    return this.gameModel.findOne({ where: { id } });
+    return this.gameModel.findOne({ include: { all: true }, where: { id } });
   }
 
   update(id: number, updateGameDto: UpdateGameDto) {
