@@ -13,7 +13,9 @@ import { CreateGameItemDto } from './dto/create-game-item.dto';
 import { UpdateGameItemDto } from './dto/update-game-item.dto';
 import { ApiBearerAuth } from '@nestjs/swagger';
 import { JwtAuthGuard } from '@/auth/guard/jwt-auth.guard';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('game-items')
 @Controller('game-items')
 export class GameItemsController {
   constructor(private readonly gameItemsService: GameItemsService) {}
