@@ -7,6 +7,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.useGlobalPipes(new ValidationPipe());
   const config = new DocumentBuilder()
+    .addBearerAuth()
     .setTitle('Game Shop API')
     .setDescription('The API description')
     .setVersion('1.0')
