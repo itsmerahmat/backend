@@ -10,23 +10,59 @@ import { User } from './users/model/user.model';
 import { Game } from './games/model/game.model';
 import { GameItem } from './game-items/model/game-item.model';
 import { Order } from './orders/model/order.model';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { AuthModule } from './auth/auth.module';
+import { MailerModule } from '@nestjs-modules/mailer';
 
 @Module({
   imports: [
-    SequelizeModule.forRoot({
-      dialect: 'mysql',
-      host: 'localhost',
-      port: 3306,
-      username: 'root',
-      password: '',
-      database: 'gameshop',
-      models: [User, Game, GameItem, Order],
-      // autoLoadModels: true,
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
+    SequelizeModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: async (configService) => ({
+        dialect: 'mysql',
+        models: [User, Game, GameItem, Order],
+        // autoLoadModels: true,
+        ...(configService.get('DATABASE_URL')
+          ? { uri: configService.get('DATABASE_URL') }
+          : {
+              host: configService.get('DB_HOST'),
+              port: configService.get('DB_PORT'),
+              username: configService.get('DB_USERNAME'),
+              password: configService.get('DB_PASSWORD'),
+              database: configService.get('DB_DATABASE'),
+            }),
+      }),
+      inject: [ConfigService],
+    }),
+    MailerModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory(configService: ConfigService) {
+        return {
+          transport: {
+            // host: configService.get('SMTP_HOST'),
+            // port: configService.get('SMTP_PORT'),
+            // secure: false,
+            service: 'gmail',
+            auth: {
+              user: configService.get('SMTP_USER'),
+              pass: configService.get('SMTP_PASS'),
+            },
+          },
+          defaults: {
+            from: '"No Reply" <jordirwn@gmail.com>',
+          },
+        };
+      },
+      inject: [ConfigService],
     }),
     UsersModule,
     GamesModule,
     GameItemsModule,
     OrdersModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
