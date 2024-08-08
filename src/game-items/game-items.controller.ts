@@ -14,6 +14,9 @@ import { UpdateGameItemDto } from './dto/update-game-item.dto';
 import { ApiBearerAuth } from '@nestjs/swagger';
 import { JwtAuthGuard } from '@/auth/guard/jwt-auth.guard';
 import { ApiTags } from '@nestjs/swagger';
+import { RolesGuard } from '@/roles/roles.guard';
+import { Role } from '@/roles/role.enum';
+import { Roles } from '@/roles/roles.decorator';
 
 @ApiTags('game-items')
 @Controller('game-items')
@@ -21,7 +24,8 @@ export class GameItemsController {
   constructor(private readonly gameItemsService: GameItemsService) {}
 
   @ApiBearerAuth()
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.Admin)
   @Post()
   create(@Body() createGameItemDto: CreateGameItemDto) {
     return this.gameItemsService.create(createGameItemDto);
@@ -38,7 +42,8 @@ export class GameItemsController {
   }
 
   @ApiBearerAuth()
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.Admin)
   @Patch(':id')
   update(
     @Param('id') id: string,
@@ -48,7 +53,8 @@ export class GameItemsController {
   }
 
   @ApiBearerAuth()
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.Admin)
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.gameItemsService.remove(+id);
