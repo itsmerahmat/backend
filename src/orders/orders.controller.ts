@@ -14,6 +14,9 @@ import { UpdateOrderDto } from './dto/update-order.dto';
 import { ApiBearerAuth } from '@nestjs/swagger';
 import { JwtAuthGuard } from '@/auth/guard/jwt-auth.guard';
 import { ApiTags } from '@nestjs/swagger';
+import { RolesGuard } from '@/roles/roles.guard';
+import { Roles } from '@/roles/roles.decorator';
+import { Role } from '@/roles/role.enum';
 
 @ApiTags('orders')
 @Controller('orders')
@@ -40,14 +43,16 @@ export class OrdersController {
   }
 
   @ApiBearerAuth()
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.Admin)
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateOrderDto: UpdateOrderDto) {
     return this.ordersService.update(+id, updateOrderDto);
   }
 
   @ApiBearerAuth()
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.Admin)
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.ordersService.remove(+id);
