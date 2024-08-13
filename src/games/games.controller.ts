@@ -16,6 +16,9 @@ import { UpdateGameDto } from './dto/update-game.dto';
 import { ApiBearerAuth, ApiConsumes } from '@nestjs/swagger';
 import { JwtAuthGuard } from '@/auth/guard/jwt-auth.guard';
 import { ApiTags } from '@nestjs/swagger';
+import { Roles } from '@/roles/roles.decorator';
+import { Role } from '@/roles/role.enum';
+import { RolesGuard } from '@/roles/roles.guard';
 import { UploadInterceptor } from '@/upload/upload.interceptor';
 import { UploadService } from '@/upload/upload.service';
 
@@ -28,7 +31,8 @@ export class GamesController {
   ) {}
 
   @ApiBearerAuth()
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.Admin)
   @Post()
   @UseInterceptors(UploadInterceptor)
   @ApiConsumes('multipart/form-data')
@@ -55,14 +59,16 @@ export class GamesController {
   }
 
   @ApiBearerAuth()
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.Admin)
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateGameDto: UpdateGameDto) {
     return this.gamesService.update(+id, updateGameDto);
   }
 
   @ApiBearerAuth()
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.Admin)
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.gamesService.remove(+id);
