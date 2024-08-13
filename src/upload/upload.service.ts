@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
+import { unlinkSync } from 'fs';
 
 @Injectable()
 export class UploadService {
@@ -24,5 +25,13 @@ export class UploadService {
   getFileUrl(filename: string): string {
     const appUrl = this.configService.get<string>('APP_URL');
     return `${appUrl}/uploads/${filename}`;
+  }
+
+  deleteFile(filename: string) {
+    try {
+      unlinkSync(`./uploads/${filename}`);
+    } catch (error) {
+      console.error('Error deleting file', error);
+    }
   }
 }

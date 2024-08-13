@@ -20,15 +20,11 @@ import { Roles } from '@/roles/roles.decorator';
 import { Role } from '@/roles/role.enum';
 import { RolesGuard } from '@/roles/roles.guard';
 import { UploadInterceptor } from '@/upload/upload.interceptor';
-import { UploadService } from '@/upload/upload.service';
 
 @ApiTags('games')
 @Controller('games')
 export class GamesController {
-  constructor(
-    private readonly gamesService: GamesService,
-    private readonly uploadService: UploadService,
-  ) {}
+  constructor(private readonly gamesService: GamesService) {}
 
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard, RolesGuard)
@@ -40,12 +36,7 @@ export class GamesController {
     @Body() createGameDto: CreateGameDto,
     @UploadedFile() image_url: Express.Multer.File,
   ) {
-    if (typeof image_url === 'object') {
-      createGameDto.image_url = this.uploadService.getFileUrl(
-        image_url.filename,
-      );
-    }
-    return this.gamesService.create(createGameDto);
+    return this.gamesService.create(createGameDto, image_url);
   }
 
   @Get()
@@ -62,8 +53,14 @@ export class GamesController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.Admin)
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateGameDto: UpdateGameDto) {
-    return this.gamesService.update(+id, updateGameDto);
+  @UseInterceptors(UploadInterceptor)
+  @ApiConsumes('multipart/form-data')
+  update(
+    @Param('id') id: string,
+    @Body() updateGameDto: UpdateGameDto,
+    @UploadedFile() image_url: Express.Multer.File,
+  ) {
+    return this.gamesService.update(+id, updateGameDto, image_url);
   }
 
   @ApiBearerAuth()
