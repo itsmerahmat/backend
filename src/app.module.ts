@@ -13,6 +13,7 @@ import { Order } from './orders/model/order.model';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import { MailerModule } from '@nestjs-modules/mailer';
+import { UploadModule } from './upload/upload.module';
 
 @Module({
   imports: [
@@ -63,6 +64,7 @@ import { MailerModule } from '@nestjs-modules/mailer';
     GameItemsModule,
     OrdersModule,
     AuthModule,
+    UploadModule,
   ],
   controllers: [AppController],
   providers: [AppService],

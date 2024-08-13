@@ -6,7 +6,7 @@ import {
   Request,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBody } from '@nestjs/swagger';
+import { ApiBody, ApiTags } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { LocalAuthGuard } from './guard/local-auth.guard';
 import { CreateUserDto } from '@/users/dto/create-user.dto';
@@ -14,6 +14,7 @@ import { JwtAuthGuard } from './guard/jwt-auth.guard';
 import ForgotPasswordDto from './dto/forgot-password.dto';
 import ResetPasswordDto from './dto/reset-password.dto';
 
+@ApiTags('auth')
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}

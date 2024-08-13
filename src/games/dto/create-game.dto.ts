@@ -14,6 +14,9 @@ export class CreateGameDto {
   @ApiProperty()
   title: string;
 
-  @ApiProperty()
-  image_url: string;
+  // @ApiProperty()
+  // image_url: string;
+
+  @ApiProperty({ type: 'string', format: 'binary' })
+  image_url: any;
 }
