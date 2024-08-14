@@ -22,12 +22,12 @@ import { RolesGuard } from '@/roles/roles.guard';
 import { UploadInterceptor } from '@/upload/upload.interceptor';
 
 @ApiTags('games')
+@UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('games')
 export class GamesController {
   constructor(private readonly gamesService: GamesService) {}
 
   @ApiBearerAuth()
-  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.Admin)
   @Post()
   @UseInterceptors(UploadInterceptor)
@@ -39,18 +39,19 @@ export class GamesController {
     return this.gamesService.create(createGameDto, image_url);
   }
 
+  @Roles(Role.Public)
   @Get()
   findAll() {
     return this.gamesService.findAll();
   }
 
+  @Roles(Role.Public)
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.gamesService.findOne(+id);
   }
 
   @ApiBearerAuth()
-  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.Admin)
   @Patch(':id')
   @UseInterceptors(UploadInterceptor)
@@ -64,7 +65,6 @@ export class GamesController {
   }
 
   @ApiBearerAuth()
-  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.Admin)
   @Delete(':id')
   remove(@Param('id') id: string) {
