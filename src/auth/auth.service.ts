@@ -1,4 +1,5 @@
 import { CreateUserDto } from '@/users/dto/create-user.dto';
+import { IUserSafe } from '@/users/interfaces/user-safe.interface';
 import { UsersService } from '@/users/users.service';
 import { MailerService } from '@nestjs-modules/mailer';
 import { Injectable } from '@nestjs/common';
@@ -23,12 +24,12 @@ export class AuthService {
     return null;
   }
 
-  async generateToken(user: any) {
+  async generateToken(user: IUserSafe) {
     const payload = { username: user.username, sub: user.id };
     return this.jwtService.signAsync(payload);
   }
 
-  async login(user: any) {
+  async login(user: IUserSafe) {
     return {
       access_token: await this.generateToken(user),
     };
