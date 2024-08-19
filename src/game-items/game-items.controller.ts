@@ -19,30 +19,31 @@ import { Role } from '@/roles/role.enum';
 import { Roles } from '@/roles/roles.decorator';
 
 @ApiTags('game-items')
+@UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('game-items')
 export class GameItemsController {
   constructor(private readonly gameItemsService: GameItemsService) {}
 
   @ApiBearerAuth()
-  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.Admin)
   @Post()
   create(@Body() createGameItemDto: CreateGameItemDto) {
     return this.gameItemsService.create(createGameItemDto);
   }
 
+  @Roles(Role.Public)
   @Get()
   findAll() {
     return this.gameItemsService.findAll();
   }
 
+  @Roles(Role.Public)
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.gameItemsService.findOne(+id);
   }
 
   @ApiBearerAuth()
-  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.Admin)
   @Patch(':id')
   update(
@@ -53,7 +54,6 @@ export class GameItemsController {
   }
 
   @ApiBearerAuth()
-  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.Admin)
   @Delete(':id')
   remove(@Param('id') id: string) {

@@ -49,4 +49,16 @@ export class User extends Model<User> {
 
   @HasMany(() => Order)
   orders: Order[];
+
+  @Column({
+    type: DataType.DATE,
+    field: 'created_at',
+  })
+  created_at: Date;
+
+  @Column({
+    type: DataType.DATE,
+    field: 'updated_at',
+  })
+  updated_at: Date;
 }

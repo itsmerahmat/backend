@@ -40,7 +40,7 @@ export class UsersService {
     return this.userModel.update(updateUserDto, { where: { id } });
   }
 
-  remove(id: number) {
+  remove(id: string) {
     return this.userModel.destroy({ where: { id } });
   }
 }
