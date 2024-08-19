@@ -15,7 +15,7 @@ export class JwtAuthGuard extends AuthGuard(['jwt', 'jwt-reset-password']) {
       context.getHandler(),
       context.getClass(),
     ]);
-    if (requiredRoles.some((role: Role) => role == Role.Public)) {
+    if (requiredRoles?.some((role: Role) => role == Role.Public)) {
       return true;
     }
     return super.canActivate(context);
